@@ -1,0 +1,9 @@
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\bin\Debug\DriveLockerGUI.exe.config
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\bin\Debug\DriveLockerGUI.exe
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\bin\Debug\DriveLockerGUI.pdb
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\obj\Debug\DriveLockerGUI.csprojAssemblyReference.cache
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\obj\Debug\DriveLockerGUI.Form1.resources
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\obj\Debug\DriveLockerGUI.Properties.Resources.resources
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\obj\Debug\DriveLockerGUI.csproj.GenerateResource.cache
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\obj\Debug\DriveLockerGUI.exe
+C:\Users\XymerOne\source\repos\DriveLockerGUI\DriveLockerGUI\obj\Debug\DriveLockerGUI.pdb
