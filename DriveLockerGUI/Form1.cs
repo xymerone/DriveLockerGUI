@@ -26,16 +26,17 @@ namespace DriveLockerGUI
 
         public void StartConfig()
         {
-            if (Program.MyCfg.Read("HideStart") == "true")
+            
+            if (Convert.ToBoolean(Program.options.GetValue("HideStart")))
             {
                 ToTray();
                 checkBox2.Checked = true;
             }
-            if (Program.MyCfg.Read("Autorun") == "true")
+            if (Convert.ToBoolean(Program.options.GetValue("Autorun")))
             {
                 checkBox1.Checked = true;
             }
-            if (Program.MyCfg.Read("Autostart") == "true")
+            if (Convert.ToBoolean(Program.options.GetValue("Autostart")))
             {
                 checkBox3.Checked = true;
                 Lock.Start();
@@ -82,6 +83,7 @@ namespace DriveLockerGUI
             {
                 Lock.Abort();
             }
+            Program.options.Close();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -91,13 +93,13 @@ namespace DriveLockerGUI
                 log.Text = "Вкажіть сикрет ключа!!!";
                 return;
             }
-            string FileKey = (string)comboBox1.SelectedItem + Program.MyCfg.Read("NameKeyFile").ToString();
+            string FileKey = (string)comboBox1.SelectedItem + Program.options.GetValue("NameKeyFile").ToString();
             if (!File.Exists(FileKey))
             {
                 string hs = Program.GetMd5Hash(textBox1.Text + Program.sald);
                 textBox1.Text = "";
                 File.WriteAllText(FileKey, hs);
-                Program.MyCfg.Write("Hash", hs);
+                Program.options.SetValue("Hash", hs);
                 log.Text = "Ключ " + FileKey + " створено!";
                 if (!button4.Enabled)
                 {
@@ -142,28 +144,28 @@ namespace DriveLockerGUI
             if (checkBox1.Checked)
             {
                 Program.AddToAutorun();
-                Program.MyCfg.Write("Autorun", "true");
+                Program.options.SetValue("Autorun", 1);
             }
             else
             {
                 Program.AddToAutorun(true);
-                Program.MyCfg.Write("Autorun", "false");
+                Program.options.SetValue("Autorun", 0);
             }
             if (checkBox2.Checked)
             {
-                Program.MyCfg.Write("HideStart", "true");
+                Program.options.SetValue("HideStart", 1);
             }
             else
             {
-                Program.MyCfg.Write("HideStart", "false");
+                Program.options.SetValue("HideStart", 0);
             }
             if (checkBox3.Checked)
             {
-                Program.MyCfg.Write("Autostart", "true");
+                Program.options.SetValue("Autostart", 1);
             }
             else
             {
-                Program.MyCfg.Write("Autostart", "false");
+                Program.options.SetValue("Autostart", 0);
             }
         }
 
@@ -174,7 +176,7 @@ namespace DriveLockerGUI
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (Program.MyCfg.Read("Hash") == "null")
+            if (Program.options.GetValue("Hash").ToString().Length == 0)
             {
                 log1.Text = "Флешка-ключ не створена!!!";
                 button4.Enabled = false;

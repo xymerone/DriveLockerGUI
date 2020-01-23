@@ -14,37 +14,59 @@ namespace DriveLockerGUI
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
-        public static IniFile MyCfg;
-        public static string FileIniPath = "config.ini";
+        static string COnfigKeyName = "DriveLocker"; 
         public static string sald = "AypiaCgw#N";
+        public static RegistryKey options;
         [STAThread]
         
         static void Main()
         {
-            
-            if (!File.Exists(FileIniPath))
-            {
-                CreateIniConfig();
-            }
-            MyCfg = new IniFile(FileIniPath);
+            options = GetRegistryOpt();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             
         }
-        static void CreateIniConfig()
+        public static RegistryKey GetRegistryOpt()
         {
-            File.WriteAllText(FileIniPath, "");
-            var ini = new IniFile(FileIniPath);
-            //MyCfg = new IniFile(FileIniPath);
-            ini.Write("AutorunName", "DriveLockerGUI");
-            ini.Write("Autorun", "false");
-            ini.Write("Autostart", "false");
-            ini.Write("HideStart", "false");
-            ini.Write("TimeoutBlock", "3500");
-            ini.Write("Hash",  "null");
-            ini.Write("NameKeyFile", "DriveLocker.key");
+            if (!ExistsConfigRegistry())
+            {
+                RegistryKey currentUserKey = Registry.CurrentUser
+                .OpenSubKey(@"Software", true);
+                RegistryKey DLKey = currentUserKey.CreateSubKey(COnfigKeyName);
+                DLKey.SetValue("AutorunName", "DriveLockerGUI");
+                DLKey.SetValue("Autorun", 0);
+                DLKey.SetValue("Autostart", 0);
+                DLKey.SetValue("HideStart", 0);
+                DLKey.SetValue("TimeoutBlock", 3500);
+                DLKey.SetValue("Hash", "");
+                DLKey.SetValue("NameKeyFile", "DriveLocker.key");
+                DLKey.Close();
+                return Registry.CurrentUser
+                    .OpenSubKey(@"Software\" + COnfigKeyName, true);
+            }
+            else
+            {
+                return Registry.CurrentUser
+                    .OpenSubKey(@"Software\" + COnfigKeyName, true);
+            }
+            
+
         }
+        static bool ExistsConfigRegistry()
+        {
+            RegistryKey currentUserKey = Registry.CurrentUser
+                .OpenSubKey(@"Software");
+            foreach(string s in currentUserKey.GetSubKeyNames())
+            {
+                if (s == COnfigKeyName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         public static List<string> GetFlashka()
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
@@ -83,7 +105,7 @@ namespace DriveLockerGUI
         public static void AddToAutorun(bool delete = false)
         {
             string FileRoot = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-            string name = MyCfg.Read("AutorunName");
+            string name = options.GetValue("AutorunName").ToString();
             RegistryKey AutoRun = Registry.CurrentUser
                 .OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
             if (delete)
@@ -104,9 +126,9 @@ namespace DriveLockerGUI
         }
         public static void Locker()
         {
-            string FileName = MyCfg.Read("NameKeyFile");
-            string key = MyCfg.Read("Hash");
-            int timeout = Convert.ToInt32(MyCfg.Read("TimeoutBlock"));
+            string FileName = options.GetValue("NameKeyFile").ToString();
+            string key = options.GetValue("Hash").ToString();
+            int timeout = Convert.ToInt32(options.GetValue("TimeoutBlock"));
             while (true)
             {
                 List<string> drives = GetFlashka();
